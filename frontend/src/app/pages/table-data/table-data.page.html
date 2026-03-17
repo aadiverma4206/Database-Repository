@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>
+      {{ tableName }} Data
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+
+  <div class="page-wrapper">
+
+    <!--  INFO CARD -->
+    <div class="table-info-card">
+      <div class="info-left">
+        <h2 class="table-title">{{ tableName }}</h2>
+        <p class="table-subtitle">Database: {{ dbName }}</p>
+      </div>
+
+      <div class="row-count" *ngIf="rows">
+        {{ rows.length }} Rows<br>
+        {{ columns.length }} Column
+      </div>
+
+      <!-- <div class="columns-count" *ngIf="rows">
+         {{ columns.length }} Column
+      </div> -->
+
+
+    </div>
+
+    <!--  DATA TABLE -->
+    <div class="table-container" *ngIf="columns && columns.length > 0">
+
+      <table class="data-table">
+
+        <!-- HEADER -->
+        <thead>
+          <tr>
+            <th *ngFor="let col of columns">
+              {{ col }}
+            </th>
+          </tr>
+        </thead>
+
+        <!-- BODY -->
+        <tbody>
+          <tr *ngFor="let row of rows">
+            <td *ngFor="let col of columns">
+              {{ row[col] }}
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <!-- EMPTY -->
+    <div *ngIf="columns && columns.length === 0" class="empty-state">
+      No Data Found
+    </div>
+
+  </div>
+
+</ion-content>

@@ -1,0 +1,93 @@
+<ion-header>
+  <ion-toolbar class="header-toolbar">
+    <ion-title>Databases</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="page-wrapper">
+
+<!-- user database -->
+    <div class="section-header">
+      User Databases ({{ userDatabases.length }})
+    </div>
+
+    <ion-card
+      class="database-card"
+      *ngFor="let db of userDatabases; trackBy: trackByDb"
+      (click)="openDatabase(db.Database)"
+    >
+      <ion-card-content class="card-content-row">
+
+        <div class="database-left">
+          <ion-icon
+            name="server-outline"
+            class="database-icon user-icon">
+          </ion-icon>
+
+          <div>
+            <h3 class="database-title">
+              {{ db.Database }}
+            </h3>
+            <p class="database-subtitle">
+              Click to view tables
+            </p>
+          </div>
+        </div>
+
+        <ion-icon
+          name="chevron-forward-outline"
+          class="forward-icon">
+        </ion-icon>
+
+      </ion-card-content>
+    </ion-card>
+
+<!-- system databases -->
+    <div class="section-header system-header">
+      System Databases ({{ systemDatabases.length }})
+    </div>
+
+    <ion-card
+      class="database-card system-card"
+      *ngFor="let db of systemDatabases; trackBy: trackByDb"
+      (click)="openDatabase(db.Database)"
+    >
+      <ion-card-content class="card-content-row">
+
+        <div class="database-left">
+          <ion-icon
+            name="settings-outline"
+            class="database-icon system-icon">
+          </ion-icon>
+
+          <div>
+            <h3 class="database-title">
+              {{ db.Database }}
+            </h3>
+            <p class="database-subtitle">
+              Prebuilt database
+            </p>
+          </div>
+        </div>
+
+        <ion-icon
+          name="chevron-forward-outline"
+          class="forward-icon">
+        </ion-icon>
+
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Empty State -->
+    <div
+      *ngIf="databaseList && databaseList.length === 0"
+      class="empty-state"
+    >
+      No Databases Found
+    </div>
+
+  </div>
+
+</ion-content>

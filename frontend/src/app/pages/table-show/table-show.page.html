@@ -1,0 +1,47 @@
+<ion-header translucent="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+
+
+    <ion-title>
+      {{ dbName }} Tables ({{ tableList.length }})
+    </ion-title>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+
+  <div class="page-wrapper">
+
+    <!-- Tables List -->
+    <div class="table-card" *ngFor="let table of tableList" (click)="openTable(table.TABLE_NAME)">
+      <div class="table-card-row">
+
+        <!-- Left Content -->
+        <div class="table-info">
+          <h3 class="table-name">
+            {{ table.TABLE_NAME }}
+          </h3>
+
+          <p class="table-comment">
+            {{ table.TABLE_COMMENT || 'No Comment Available' }}
+          </p>
+        </div>
+
+        <!-- Arrow -->
+        <ion-icon name="chevron-forward-outline" class="forward-icon"></ion-icon>
+
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="tableList && tableList.length === 0" class="empty-state">
+      No Tables Found
+    </div>
+
+  </div>
+
+</ion-content>

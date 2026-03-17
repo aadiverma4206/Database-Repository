@@ -1,0 +1,173 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>
+      {{ tableName }} Structure
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+
+  <div class="table-wrapper">
+
+    <!-- ===== INFO CARD ===== -->
+    <div class="table-info-card">
+
+      <div class="table-info-top">
+
+        <div>
+          <h2 class="table-title">
+            {{ tableName }}
+          </h2>
+
+          <p class="table-subtitle">
+            Database: {{ dbName }}
+          </p>
+        </div>
+
+        <div class="action-buttons">
+
+          <ion-button
+            size="small"
+            fill="outline"
+            (click)="openEditComment()"
+          >
+            ✏ Edit Description
+          </ion-button>
+
+          <ion-button
+            size="small"
+            color="secondary"
+            (click)="viewTableData()"
+          >
+            📊 View Data
+          </ion-button>
+
+        </div>
+
+      </div>
+
+      <div class="table-meta">
+        <p>
+          <strong>Description:</strong>
+          {{ tableComment || 'No comment available' }}
+        </p>
+      </div>
+
+    </div>
+
+    <!-- ===== DESCRIPTION LABEL SECTION ===== -->
+    <div class="description-label-card">
+
+      <span class="description-label-title">
+        Description
+      </span>
+
+      <!-- Excel Export Button -->
+      <ion-button
+        size="small"
+        color="success"
+        shape="round"
+        fill="solid"
+        (click)="exportToExcel()"
+      >
+        <ion-icon
+          slot="icon-only"
+          name="document-attach-outline">
+        </ion-icon>
+      </ion-button>
+
+    </div>
+
+    <!-- ===== STRUCTURE TABLE ===== -->
+    <div
+      class="table-container"
+      *ngIf="columnList && columnList.length > 0"
+    >
+      <table class="structure-table">
+
+        <thead>
+          <tr>
+            <th>Sr. No.</th>
+            <th>Column Name</th>
+            <th>Datatype</th>
+            <th>Collation Name</th>
+            <th>Key</th>
+            <th>Extra</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let row of columnList">
+
+            <td>
+              {{ row.ORDINAL_POSITION }}
+            </td>
+
+            <td class="column-name">
+              {{ row.COLUMN_NAME }}
+            </td>
+
+            <td>
+              {{ row.COLUMN_TYPE }}
+            </td>
+
+            <td>
+              {{ row.COLLATION_NAME || '—' }}
+            </td>
+
+            <td>
+              <span *ngIf="row.COLUMN_KEY" class="key-badge">
+                {{ row.COLUMN_KEY }}
+              </span>
+              <span *ngIf="!row.COLUMN_KEY">—</span>
+            </td>
+
+            <td>
+              {{ row.EXTRA || '—' }}
+            </td>
+
+            <!--  Column Comment with Edit Icon -->
+            <td class="description-cell">
+              <div class="comment-cell">
+
+                <span class="comment-text">
+                  {{ row.COLUMN_COMMENT || '—' }}
+                </span>
+
+                <ion-button
+                  fill="clear"
+                  size="small"
+                  (click)="openEditColumnComment(row)"
+                >
+                  <ion-icon
+                    name="create-outline"
+                    slot="icon-only">
+                  </ion-icon>
+                </ion-button>
+
+              </div>
+            </td>
+
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+
+    <!-- ===== EMPTY STATE ===== -->
+    <div
+      *ngIf="columnList && columnList.length === 0"
+      class="empty-state"
+    >
+      No Columns Found
+    </div>
+
+  </div>
+
+</ion-content>

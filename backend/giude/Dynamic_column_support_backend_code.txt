@@ -1,0 +1,248 @@
+// const express = require('express');
+// const cors = require('cors');
+// const mysql = require('mysql2');
+
+// const app = express();
+
+// app.use(cors());
+// app.use(express.json());
+
+// /* ===================================================
+//     Connection Pool
+// =================================================== */
+// const db = mysql.createPool({
+//   host: 'localhost',
+//   user: 'root',
+//   password: 'system',
+//   waitForConnections: true,
+//   connectionLimit: 10,
+//   queueLimit: 0
+// });
+
+// console.log("MariaDB Pool Created");
+
+// /* ===================================================
+//    1️ GET ALL DATABASES
+// =================================================== */
+// app.get('/databases', (req, res) => {
+
+//   db.query("SHOW DATABASES", (err, result) => {
+//     if (err) {
+//       console.error("Error fetching databases:", err);
+//       return res.status(500).json({
+//         success: false,
+//         message: err.message
+//       });
+//     }
+
+//     res.json(result);
+//   });
+
+// });
+
+
+// /* ===================================================
+//    2️ GET TABLES + COMMENT
+// =================================================== */
+// app.get('/tables/:dbname', (req, res) => {
+
+//   const dbName = req.params.dbname;
+
+//   if (!dbName || !/^[a-zA-Z0-9_]+$/.test(dbName)) {
+//     return res.status(400).json({
+//       success: false,
+//       message: "Invalid database name"
+//     });
+//   }
+
+//   const query = `
+//     SELECT 
+//       TABLE_NAME,
+//       TABLE_COMMENT
+//     FROM information_schema.TABLES
+//     WHERE TABLE_SCHEMA = ?
+//   `;
+
+//   db.query(query, [dbName], (err, result) => {
+//     if (err) {
+//       console.error("Error fetching tables:", err);
+//       return res.status(500).json({
+//         success: false,
+//         message: err.message
+//       });
+//     }
+
+//     res.json(result);
+//   });
+
+// });
+
+
+// /* ===================================================
+//    3️ GET TABLE STRUCTURE + TABLE COMMENT
+// =================================================== */
+// app.get('/table-info/:dbname/:tablename', (req, res) => {
+
+//   const { dbname, tablename } = req.params;
+
+//   if (
+//     !dbname || !tablename ||
+//     !/^[a-zA-Z0-9_]+$/.test(dbname) ||
+//     !/^[a-zA-Z0-9_]+$/.test(tablename)
+//   ) {
+//     return res.status(400).json({
+//       success: false,
+//       message: "Invalid database or table name"
+//     });
+//   }
+
+//   const tableQuery = `
+//     SELECT TABLE_COMMENT
+//     FROM information_schema.TABLES
+//     WHERE TABLE_SCHEMA = ?
+//     AND TABLE_NAME = ?
+//   `;
+
+//   const columnQuery = `
+//     SELECT *
+//     FROM information_schema.COLUMNS
+//     WHERE TABLE_SCHEMA = ?
+//     AND TABLE_NAME = ?
+//     ORDER BY ORDINAL_POSITION
+//   `;
+
+//   db.query(tableQuery, [dbname, tablename], (err, tableResult) => {
+
+//     if (err) {
+//       console.error("Error fetching table metadata:", err);
+//       return res.status(500).json({
+//         success: false,
+//         message: err.message
+//       });
+//     }
+
+//     db.query(columnQuery, [dbname, tablename], (err, columnResult) => {
+
+//       if (err) {
+//         console.error("Error fetching column info:", err);
+//         return res.status(500).json({
+//           success: false,
+//           message: err.message
+//         });
+//       }
+
+//       res.json({
+//         tableComment: tableResult?.[0]?.TABLE_COMMENT || '',
+//         columns: columnResult || []
+//       });
+
+//     });
+
+//   });
+
+// });
+
+
+// /* ===================================================
+//    4️ UPDATE TABLE COMMENT (NEW FEATURE)
+//     Nothing removed — only added
+// =================================================== */
+// app.put('/update-table-comment/:dbname/:tablename', (req, res) => {
+
+//   const { dbname, tablename } = req.params;
+//   const { comment } = req.body;
+
+//   if (
+//     !dbname || !tablename ||
+//     !/^[a-zA-Z0-9_]+$/.test(dbname) ||
+//     !/^[a-zA-Z0-9_]+$/.test(tablename)
+//   ) {
+//     return res.status(400).json({
+//       success: false,
+//       message: "Invalid database or table name"
+//     });
+//   }
+
+//   if (typeof comment !== 'string') {
+//     return res.status(400).json({
+//       success: false,
+//       message: "Invalid comment"
+//     });
+//   }
+
+//   const query = `
+//     ALTER TABLE \`${dbname}\`.\`${tablename}\`
+//     COMMENT = ?
+//   `;
+
+//   db.query(query, [comment], (err) => {
+
+//     if (err) {
+//       console.error("Error updating table comment:", err);
+//       return res.status(500).json({
+//         success: false,
+//         message: err.message
+//       });
+//     }
+
+//     res.json({
+//       success: true,
+//       message: "Table comment updated successfully"
+//     });
+
+//   });
+
+// });
+// /* ===================================================
+//    5️ GET TABLE DATA (Dynamic Columns + Rows)
+// =================================================== */
+// app.get('/table-data/:dbname/:tablename', (req, res) => {
+
+//   const { dbname, tablename } = req.params;
+
+//   if (
+//     !dbname || !tablename ||
+//     !/^[a-zA-Z0-9_]+$/.test(dbname) ||
+//     !/^[a-zA-Z0-9_]+$/.test(tablename)
+//   ) {
+//     return res.status(400).json({
+//       success: false,
+//       message: "Invalid database or table name"
+//     });
+//   }
+
+//   const query = `
+//     SELECT * FROM \`${dbname}\`.\`${tablename}\`
+//     LIMIT 500
+//   `;
+
+//   db.query(query, (err, rows) => {
+
+//     if (err) {
+//       console.error("Error fetching table data:", err);
+//       return res.status(500).json({
+//         success: false,
+//         message: err.message
+//       });
+//     }
+
+//     //  Extract column names dynamically
+//     const columns = rows.length > 0
+//       ? Object.keys(rows[0])
+//       : [];
+
+//     res.json({
+//       columns,
+//       rows
+//     });
+
+//   });
+
+// });
+
+// /* ===================================================
+//    SERVER START
+// =================================================== */
+// app.listen(3000, () => {
+//   console.log(" Server running on http://localhost:3000");
+// });

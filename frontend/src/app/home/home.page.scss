@@ -1,0 +1,134 @@
+
+ion-content {
+  --background: #eef2ff;
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+  background-attachment: fixed;
+
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+ion-toolbar {
+  --background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  --color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+ion-title {
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: 0.4px;
+  text-align: center;
+}
+
+.page-wrapper {
+  max-width: 800px;
+  margin: 25px auto;
+  padding: 0 16px 40px;
+}
+.section-header {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 28px 0 14px;
+  color: #1e293b;
+}
+
+.system-header {
+  color: #64748b;
+}
+
+.database-card {
+  background: rgba(255, 255, 255, 0.95);  /* solid-ish instead of blur */
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  cursor: pointer;
+
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.08);
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  /* GPU FIX */
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.database-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(99, 102, 241, 0.15);
+}
+
+.card-content-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.database-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.database-icon {
+  font-size: 22px;
+}
+
+.user-icon {
+  color: #6366f1;
+}
+
+.system-icon {
+  color: #94a3b8;
+}
+
+.database-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.database-subtitle {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.forward-icon {
+  font-size: 18px;
+  color: #94a3b8;
+  transition: transform 0.2s ease;
+}
+
+.database-card:hover .forward-icon {
+  transform: translateX(6px);
+  color: #6366f1;
+}
+
+.system-card {
+  opacity: 0.95;
+}
+
+.empty-state {
+  text-align: center;
+  margin-top: 60px;
+  font-size: 14px;
+  color: #64748b;
+  opacity: 0.85;
+}
+
+@media (max-width: 600px) {
+  .database-card {
+    padding: 12px 14px;
+  }
+
+  .database-title {
+    font-size: 15px;
+  }
+
+  .database-subtitle {
+    font-size: 12px;
+  }
+}
